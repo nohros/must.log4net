@@ -19,81 +19,81 @@ namespace Nohros.Logging.log4net
 
     protected internal const string kDefaultLogFileName = "must.log";
 
-    protected ILog logger;
+    protected ILog logger_;
 
     /// <inherit />
     public void Debug(string message) {
-      logger.Debug(message);
+      logger_.Debug(message);
     }
 
     /// <inherit />
     public void Debug(string message, Exception exception) {
-      logger.Debug(message, exception);
+      logger_.Debug(message, exception);
     }
 
     /// <inherit />
     public void Error(string message) {
-      logger.Error(message);
+      logger_.Error(message);
     }
 
     /// <inherit />
     public void Error(string message, Exception exception) {
-      logger.Error(message, exception);
+      logger_.Error(message, exception);
     }
 
     /// <inherit />
     public void Fatal(string message) {
-      logger.Fatal(message);
+      logger_.Fatal(message);
     }
 
     /// <inherit />
     public void Fatal(string message, Exception exception) {
-      logger.Fatal(message, exception);
+      logger_.Fatal(message, exception);
     }
 
     /// <inherit />
     public void Info(string message) {
-      logger.Info(message);
+      logger_.Info(message);
     }
 
     /// <inherit />
     public void Info(string message, Exception exception) {
-      logger.Info(message, exception);
+      logger_.Info(message, exception);
     }
 
     /// <inherit />
     public void Warn(string message) {
-      logger.Warn(message);
+      logger_.Warn(message);
     }
 
     /// <inherit />
     public void Warn(string message, Exception exception) {
-      logger.Warn(message, exception);
+      logger_.Warn(message, exception);
     }
 
     /// <inherit />
     public bool IsDebugEnabled {
-      get { return logger.IsDebugEnabled; }
+      get { return logger_.IsDebugEnabled; }
     }
 
     /// <inherit />
     public bool IsErrorEnabled {
-      get { return logger.IsErrorEnabled; }
+      get { return logger_.IsErrorEnabled; }
     }
 
     /// <inherit />
     public bool IsFatalEnabled {
-      get { return logger.IsFatalEnabled; }
+      get { return logger_.IsFatalEnabled; }
     }
 
     /// <inherit />
     public bool IsInfoEnabled {
-      get { return logger.IsInfoEnabled; }
+      get { return logger_.IsInfoEnabled; }
     }
 
     /// <inherit />
     public bool IsWarnEnabled {
-      get { return logger.IsWarnEnabled; }
+      get { return logger_.IsWarnEnabled; }
     }
 
     /// <inherit />
@@ -102,11 +102,11 @@ namespace Nohros.Logging.log4net
     }
 
     /// <summary>
-    /// Gets or sets the threshold level of the logger repository.
+    /// Gets or sets the threshold level of the logger_ repository.
     /// </summary>
     internal LogLevel LogLevel {
       get {
-        Level level = logger.Logger.Repository.Threshold;
+        Level level = logger_.Logger.Repository.Threshold;
         if (level == Level.All) {
           return LogLevel.All;
         }
@@ -132,7 +132,7 @@ namespace Nohros.Logging.log4net
       }
 
       set {
-        ILoggerRepository repository = logger.Logger.Repository;
+        ILoggerRepository repository = logger_.Logger.Repository;
         switch (value) {
           case LogLevel.All:
             repository.Threshold = Level.All;

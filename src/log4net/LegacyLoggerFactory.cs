@@ -11,12 +11,12 @@ namespace Nohros.Logging.log4net
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LegacyLogger"/> class
-    /// using the specified logger settings.
+    /// using the specified logger_ settings.
     /// </summary>
     /// <param name="settings">
     /// A <see cref="Nohros.Configuration.IConfiguration"/> object taht can be used to get
-    /// configuration inforamtions related with the logger to be created - such
-    /// as the configuration of a related logger.
+    /// configuration inforamtions related with the logger_ to be created - such
+    /// as the configuration of a related logger_.
     /// </param>
     protected LegacyLoggerFactory(IConfiguration settings) {
       settings_ = settings;
@@ -28,7 +28,7 @@ namespace Nohros.Logging.log4net
     /// </summary>
     /// <param name="options">
     /// A <see cref="IDictionary{TKey,TValue}"/> object that contains the
-    /// options for the logger to be created.
+    /// options for the logger_ to be created.
     /// </param>
     /// <returns>
     /// The newly created <see cref="LegacyLogger"/> object.
@@ -41,7 +41,7 @@ namespace Nohros.Logging.log4net
         Strings.kDefaultLegacyLoggerXmlElementName);
 
       // Get the xml element that is used to configure the legacy log4net
-      // logger.
+      // logger_.
       XmlElement element = settings_.XmlElements[xml_element_name];
       LegacyLogger legacy_logger = new LegacyLogger(element, logger_name);
       legacy_logger.Configure();

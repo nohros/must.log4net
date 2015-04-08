@@ -11,7 +11,7 @@ using log4net.Repository.Hierarchy;
 namespace Nohros.Logging.log4net
 {
   /// <summary>
-  /// A generic logger that uses the third party log4net logging library and
+  /// A generic logger_ that uses the third party log4net logging library and
   /// logs messages to the system console.
   /// </summary>
   /// <remarks>
@@ -39,11 +39,11 @@ namespace Nohros.Logging.log4net
     #endregion
 
     /// <summary>
-    /// Configures the <see cref="FileLogger"/> logger adding the appenders
+    /// Configures the <see cref="FileLogger"/> logger_ adding the appenders
     /// to the root repository.
     /// </summary>
     public void Configure() {
-      // create a new logger into the repository of the current assembly.
+      // create a new logger_ into the repository of the current assembly.
       ILoggerRepository root_repository =
         LogManager.GetRepository(Assembly.GetExecutingAssembly());
 
@@ -81,7 +81,7 @@ namespace Nohros.Logging.log4net
 
       root_repository.Configured = true;
 
-      logger = LogManager.GetLogger("NohrosConsoleLogger");
+      logger_ = LogManager.GetLogger("NohrosConsoleLogger");
     }
 
     ColoredConsoleAppender.LevelColors[] GetDefaultLevelsColors() {
@@ -90,7 +90,7 @@ namespace Nohros.Logging.log4net
       // be used to log a message will be the nearest mapping value for the
       // level that is equal to os less than the level of the message. So, in
       // order to log all messages to a specific color scheme we only need to
-      // set the level of the lowest level in logger level hierarchy, that is
+      // set the level of the lowest level in logger_ level hierarchy, that is
       // the lower that the level that is explicit specified, that is the
       // level of [ERROR].
       Level[] levels = new Level[] {

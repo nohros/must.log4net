@@ -19,12 +19,12 @@ namespace Nohros.Logging.log4net
     /// element.
     /// </param>
     /// <param name="logger_name">
-    /// The name of the logger related with the given <paramref name="element"/>.
+    /// The name of the logger_ related with the given <paramref name="element"/>.
     /// </param>
     /// <remarks>
     /// The <paramref name="element"/> will be used to configure the log4net
     /// library and the <paramref name="logger_name"/> will be used to get a
-    /// named logger throught the log4net <see cref="LogManager"/> class.
+    /// named logger_ throught the log4net <see cref="LogManager"/> class.
     /// </remarks>
     public LegacyLogger(XmlElement element, string logger_name) {
       element_ = element;
@@ -32,11 +32,11 @@ namespace Nohros.Logging.log4net
     }
 
     /// <summary>
-    /// Configures the <see cref="LegacyLogger"/> logger.
+    /// Configures the <see cref="LegacyLogger"/> logger_.
     /// </summary>
     public void Configure() {
       XmlConfigurator.Configure(element_);
-      logger = LogManager.GetLogger(logger_name_);
+      logger_ = LogManager.GetLogger(logger_name_);
     }
   }
 }

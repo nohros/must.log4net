@@ -1,5 +1,4 @@
 using System;
-using System.Reflection;
 using log4net;
 using log4net.Core;
 using log4net.Appender;
@@ -10,10 +9,10 @@ using log4net.Repository.Hierarchy;
 namespace Nohros.Logging.log4net
 {
   /// <summary>
-  /// A generic logger that uses the third party log4net logging library.
+  /// A generic logger_ that uses the third party log4net logging library.
   /// </summary>
   /// <remarks>
-  /// This is a generic logger that loads automatically and configures itself
+  /// This is a generic logger_ that loads automatically and configures itself
   /// through the code. The messages are logged to the console window.
   /// <para>
   /// The pattern used to log message are:
@@ -50,17 +49,39 @@ namespace Nohros.Logging.log4net
     }
 
     /// <summary>
-    /// Configures the <see cref="FileLogger"/> logger adding the appenders
+    /// Creates and configures a new instance of the
+    /// <see cref="ConsoleLogger"/> by using the default layout pattern.
+    /// </summary>
+    /// <see cref="AbstractLogger.kDefaultLogMessagePattern"/>
+    public ConsoleLogger Create() {
+      var logger = new ConsoleLogger();
+      logger.Configure();
+      return logger;
+    }
+
+    /// <summary>
+    /// Creates and configures a new instance of the
+    /// <see cref="ConsoleLogger"/> class by using the specified layout pattern.
+    /// </summary>
+    /// <param name="layout_pattern">
+    /// A string that identifies the pattern to be used to format the output
+    /// log message.
+    /// </param>
+    public ConsoleLogger Create(string layout_pattern) {
+      var logger = new ConsoleLogger();
+      logger.Configure();
+      return logger;
+    }
+
+    /// <summary>
+    /// Configures the <see cref="FileLogger"/> logger_ adding the appenders
     /// to the root repository.
     /// </summary>
     public void Configure() {
-      // create a new logger into the repository of the current assembly.
-      ILoggerRepository root_repository =
-        LogManager.GetRepository(Assembly.GetExecutingAssembly());
+      // create a new logger_ into the repository of the current assembly.
+      ILoggerRepository repository = LogManager.GetRepository();
 
-      Logger nohros_console_logger =
-        root_repository
-          .GetLogger("NohrosConsoleLogger") as Logger;
+      var logger = (Logger) repository.GetLogger("NohrosConsoleLogger");
 
       // create the layout and appender for on error messages.
       var layout = new PatternLayout {ConversionPattern = layout_pattern_};
@@ -75,11 +96,11 @@ namespace Nohros.Logging.log4net
       };
       appender.ActivateOptions();
 
-      nohros_console_logger.Parent.AddAppender(appender);
+      logger.AddAppender(appender);
 
-      root_repository.Configured = true;
+      repository.Configured = true;
 
-      logger = LogManager.GetLogger("NohrosConsoleLogger");
+      logger_ = LogManager.GetLogger("NohrosConsoleLogger");
     }
   }
 }

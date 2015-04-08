@@ -12,7 +12,7 @@ namespace Nohros.Logging.log4net
     /// </summary>
     /// <param name="options">
     /// A <see cref="IDictionary{TKey,TValue}"/> object that contains the
-    /// options for the logger to be created.
+    /// options for the logger_ to be created.
     /// </param>
     /// <returns>
     /// The newly created <see cref="FileLogger"/> object.
