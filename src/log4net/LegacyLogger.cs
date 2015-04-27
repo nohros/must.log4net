@@ -32,6 +32,21 @@ namespace Nohros.Logging.log4net
     }
 
     /// <summary>
+    /// Creates and configures a new instance of the <see cref="LegacyLogger"/>
+    /// </summary>
+    /// <param name="element">
+    /// The <see cref="XmlElement"/> containing the log4net configuration data.
+    /// </param>
+    /// <param name="logger_name">
+    /// The name of the logger to be created.
+    /// </param>
+    public static LegacyLogger Create(XmlElement element, string logger_name) {
+      var logger = new LegacyLogger(element, logger_name);
+      logger.Configure();
+      return logger;
+    }
+
+    /// <summary>
     /// Configures the <see cref="LegacyLogger"/> logger_.
     /// </summary>
     public void Configure() {

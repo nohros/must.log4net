@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Reflection;
-
 using log4net;
-using log4net.Core;
 using log4net.Appender;
+using log4net.Core;
 using log4net.Layout;
 using log4net.Repository;
 using log4net.Repository.Hierarchy;
@@ -24,43 +23,86 @@ namespace Nohros.Logging.log4net
   /// nohros configuration file.
   /// </para>
   /// </remarks>
-  public class ColoredConsoleLogger: AbstractLogger
+  public class ColoredConsoleLogger : AbstractLogger
   {
-    string layout_pattern_;
+    readonly string layout_pattern_;
     ColoredConsoleAppender.LevelColors[] level_colors_;
 
-    #region .ctor
     /// <summary>
     /// Initializes a new instance of the ConsoleLogger class.
     /// </summary>
     public ColoredConsoleLogger(string layout_pattern) {
       layout_pattern_ = layout_pattern;
     }
-    #endregion
+
+    /// <summary>
+    /// Creates and configures a new instance of the
+    /// <see cref="ColoredConsoleLogger"/> that uses the default layout
+    /// pattern and log level.
+    /// </summary>
+    /// <seealso cref="ColoredConsoleLogger"/>
+    public static ColoredConsoleLogger Create() {
+      return Create(kDefaultLogMessagePattern, Level.Info);
+    }
+
+    /// <summary>
+    /// Creates and configures a new instance of the
+    /// <see cref="ColoredConsoleLogger"/> that uses the default layout
+    /// pattern and the given log <paramref name="level"/>.
+    /// </summary>
+    /// <seealso cref="ColoredConsoleLogger"/>
+    public static ColoredConsoleLogger Create(Level level) {
+      return Create(kDefaultLogMessagePattern, level);
+    }
+
+    /// <summary>
+    /// Creates and configures a new instance of the
+    /// <see cref="ColoredConsoleLogger"/> that uses the default layout
+    /// pattern and log level.
+    /// </summary>
+    /// <seealso cref="ColoredConsoleLogger"/>
+    public static ColoredConsoleLogger Create(string layout_pattern) {
+      return Create(layout_pattern, Level.Info);
+    }
+
+    /// <summary>
+    /// Creates and configures a new instance of the
+    /// <see cref="ColoredConsoleLogger"/> that uses the given
+    /// <paramref name="layout_pattern"/> pattern and log
+    /// <paramref name="level"/>.
+    /// </summary>
+    /// <seealso cref="ColoredConsoleLogger"/>
+    public static ColoredConsoleLogger Create(string layout_pattern, Level level) {
+      var logger = new ColoredConsoleLogger(kDefaultLogMessagePattern);
+      logger.Configure(level);
+      return logger;
+    }
 
     /// <summary>
     /// Configures the <see cref="FileLogger"/> logger_ adding the appenders
     /// to the root repository.
     /// </summary>
-    public void Configure() {
+    public void Configure(Level level) {
       // create a new logger_ into the repository of the current assembly.
-      ILoggerRepository root_repository =
-        LogManager.GetRepository(Assembly.GetExecutingAssembly());
+      ILoggerRepository repository =
+        LogManager
+          .GetRepository(Assembly.GetExecutingAssembly());
 
-      Logger nohros_console_logger =
-        root_repository.GetLogger("NohrosConsoleLogger") as Logger;
+      var logger = (Logger) repository.GetLogger("NohrosColoredConsoleLogger");
 
       // create the layout and appender for on error messages.
-      PatternLayout layout = new PatternLayout();
-      layout.ConversionPattern = layout_pattern_;
+      var layout = new PatternLayout {
+        ConversionPattern = layout_pattern_
+      };
       layout.ActivateOptions();
 
       // create the appender
-      ColoredConsoleAppender appender = new ColoredConsoleAppender();
-      appender.Name = "NohrosCommonConsoleAppender";
-      appender.Layout = layout;
-      appender.Target = "Console.Out";
-      appender.Threshold = Level.All;
+      var appender = new ColoredConsoleAppender {
+        Name = "NohrosCommonColoredConsoleAppender",
+        Layout = layout,
+        Target = "Console.Out",
+        Threshold = level
+      };
 
       if (level_colors_ == null) {
         level_colors_ = GetDefaultLevelsColors();
@@ -77,11 +119,11 @@ namespace Nohros.Logging.log4net
 
       appender.ActivateOptions();
 
-      nohros_console_logger.Parent.AddAppender(appender);
+      logger.AddAppender(appender);
 
-      root_repository.Configured = true;
+      repository.Configured = true;
 
-      logger_ = LogManager.GetLogger("NohrosConsoleLogger");
+      logger_ = LogManager.GetLogger("NohrosColoredConsoleLogger");
     }
 
     ColoredConsoleAppender.LevelColors[] GetDefaultLevelsColors() {
@@ -93,18 +135,17 @@ namespace Nohros.Logging.log4net
       // set the level of the lowest level in logger_ level hierarchy, that is
       // the lower that the level that is explicit specified, that is the
       // level of [ERROR].
-      Level[] levels = new Level[] {
+      var levels = new[] {
         Level.Warn, Level.Notice, Level.Info, Level.Debug, Level.Fine,
         Level.Trace, Level.Finer, Level.Verbose, Level.Finest, Level.All
       };
 
       int levels_length = levels.Length;
-      ColoredConsoleAppender.LevelColors[] levels_colors =
+      var levels_colors =
         new ColoredConsoleAppender.LevelColors[levels_length + 1];
 
       for (int i = 0; i < levels_length; i++) {
-        ColoredConsoleAppender.LevelColors level_colors =
-          new ColoredConsoleAppender.LevelColors();
+        var level_colors = new ColoredConsoleAppender.LevelColors();
 
         level_colors.ForeColor = ColoredConsoleAppender.Colors.Green;
         level_colors.Level = levels[i];
@@ -112,10 +153,10 @@ namespace Nohros.Logging.log4net
       }
 
       // define the default color mapping for the ERROR level.
-      levels_colors[levels_length] = new ColoredConsoleAppender.LevelColors();
-      levels_colors[levels_length].Level = Level.Error;
-      levels_colors[levels_length].ForeColor =
-        ColoredConsoleAppender.Colors.Red;
+      levels_colors[levels_length] = new ColoredConsoleAppender.LevelColors {
+        Level = Level.Error,
+        ForeColor = ColoredConsoleAppender.Colors.Red
+      };
 
       return levels_colors;
     }

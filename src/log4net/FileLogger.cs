@@ -16,7 +16,7 @@ namespace Nohros.Logging.log4net
   /// This is a generic logger that loads automatically and configures itself
   /// through the code. The messages are logged to a file that resides on the
   /// same folder of the caller application base directory.The name of the
-  /// file is nohros-logger_.log.
+  /// file is nohros-logger.log.
   /// <para>
   /// The pattern used to log message are:
   ///     . "[%date %-5level/%thread] %message%newline %exception".
@@ -69,13 +69,35 @@ namespace Nohros.Logging.log4net
 
     /// <summary>
     /// Creates a configured <see cref="FileLogger"/> that uses the default
-    /// file name and layout pattern.
+    /// file name, layout pattern and log level.
     /// </summary>
     /// <returns></returns>
     public static FileLogger Create() {
-      var logger = new FileLogger();
-      logger.Configure();
-      return logger;
+      return Create(Level.Info);
+    }
+
+    /// <summary>
+    /// Creates a configured <see cref="FileLogger"/> that uses the default
+    /// file name and layout pattern and the given log level.
+    /// </summary>
+    public static FileLogger Create(Level level) {
+      return Create(kDefaultLogMessagePattern, level, kDefaultLogFileName);
+    }
+
+    /// <summary>
+    /// Creates a configured <see cref="FileLogger"/> that uses the default
+    /// file name and layout pattern.
+    /// </summary>
+    public static FileLogger Create(string layout_pattern, Level level) {
+      return Create(layout_pattern, level, kDefaultLogFileName);
+    }
+
+    /// <summary>
+    /// Creates a configured <see cref="FileLogger"/> that uses the default
+    /// file name and layout pattern.
+    /// </summary>
+    public static FileLogger Create(Level level, string file_name) {
+      return Create(kDefaultLogMessagePattern, level, kDefaultLogFileName);
     }
 
     /// <summary>
@@ -90,24 +112,25 @@ namespace Nohros.Logging.log4net
     /// <paramref name="layout_pattern"/> or <paramref name="log_file_path"/>
     /// are null.
     /// </exception>
-    public static FileLogger Create(string layout_pattern, string log_file_path) {
+    public static FileLogger Create(string layout_pattern, Level level,
+      string log_file_path) {
       var logger = new FileLogger(layout_pattern, log_file_path);
-      logger.Configure();
+      logger.Configure(level);
       return logger;
     }
 
     /// <summary>
-    /// Configures the <see cref="FileLogger"/> logger_ adding the appenders to
+    /// Configures the <see cref="FileLogger"/> logger adding the appenders to
     /// the root repository.
     /// </summary>
     /// <remarks></remarks>
-    public void Configure() {
+    public void Configure(Level level) {
       // create a new logger_ into the repository of the current assembly.
       ILoggerRepository repository =
         LogManager
           .GetRepository(Assembly.GetExecutingAssembly());
 
-      var logger = (Logger) repository.GetLogger("NohrosFileAppender");
+      var logger = (Logger) repository.GetLogger("NohrosFileLogger");
 
       // create the layout and appender for log messages
       var layout = new PatternLayout {
@@ -120,7 +143,7 @@ namespace Nohros.Logging.log4net
         File = log_file_path_,
         AppendToFile = true,
         Layout = layout,
-        Threshold = Level.All
+        Threshold = level
       };
       appender.ActivateOptions();
 
